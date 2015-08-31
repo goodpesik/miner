@@ -1,110 +1,225 @@
-function Calc (holder) {
-	var output = holder.find('.output');
-	var result = 0;
-	var currentValue = 0;
-	var memory = 0;
-	var readyForNewValue = true;
-	var action;
+jQuery(function() {
+	minerGame();
+});
+
+function minerGame () {
+	var wrapper = jQuery('#wrapper');
+	var holder = jQuery('#miner');
+	var gameFiled = 10;
+	var bombs = 10;
+	var gameCell = [];
+	var bombsClass = "bomb";
+	var hiddenClass = "hide";
+	var openClass = "open";
+	var flagClass = 'flag';
+	var emptyClass = 'empty';
+	var disabledClass = 'disabled';
+	var elements;
+	var title = wrapper.find('.title');
 	
-	output.on('keydown', function(e) {
-		return false;
-	});
+	generateGameFields();
+	generateBombs();
+	setNum();
+	generateMarkup();
+	readyGame();
 	
-	holder.on('click', 'td a', function(e) {
-		e.preventDefault();
-		keySetup($(e.currentTarget));
-	});
+	function generateGameFields () {
+		for (var x = 0; x < gameFiled; x++) {
+			gameCell[x] = [];
+			for (var y = 0; y < gameFiled; y++) {
+				var tempObj = {
+					bomb: false,
+					number: 0,
+					flag: false,
+					state: false
+				};
+				gameCell[x][y] = tempObj;
+			}
+		}
+	}
 	
-	function keySetup(key) {
-		var value = parseFloat(key.html());
-		var keyValue = key.html();
+	function generateBombs () {
+		for (var i = 0; i < bombs; i++) {
+			var x = helperRandom(gameFiled-1);
+			var y = helperRandom(gameFiled-1);
+			if (!gameCell[x][y].bomb) {
+				gameCell[x][y].bomb = true;
+				gameCell[x][y].number = -1;
+			}
+		}
+	}
+	
+	
+	function setNum () {
 		
-		switch (keyValue) {
-			case '0': 
-				if (output.val() === '0') {
+		findPosition();
+		
+		function findPosition () {
+			for (var x = 0; x < gameFiled; x++) {
+				for (var y = 0; y < gameFiled; y++) {
+					if(gameCell[x][y].bomb) {
+						findNeightbor(x,y,'bombs')
+					}
+				}
+			}
+		}
+	}
+	
+	/*
+			mode = bombs;
+			mode = empty;
+		
+		
+	*/
+	
+	function findNeightbor (x,y,mode) {
+		// onLeft
+		checkNum(x-1,y);
+		// onRight
+		checkNum(x+1,y);
+		//onTop
+		checkNum(x,y-1);
+		//onBottom
+		checkNum(x,y+1);
+		//onLeftTop
+		checkNum(x-1,y-1);
+		//onLeftBottom
+		checkNum(x-1,y+1);
+		//onRightTop
+		checkNum(x+1,y-1);
+		//onRightBottom
+		checkNum(x+1,y+1);
+		
+		function checkNum(x,y) {
+			if (x < 0 || x > gameFiled-1 || y < 0 || y > gameFiled-1) {
+				return;
+			}
+			
+			if (mode === 'bombs') {
+				if (gameCell[x][y].number > 0) {
+					gameCell[x][y].number++;
+				} else {
+					gameCell[x][y].number = 1;
+				}
+			}
+			
+			if (mode === 'empty') {
+				if (gameCell[x][y].number === 0 && !gameCell[x][y].state) {
+					
+					gameCell[x][y].state = 'open';
+					
+					elements.each(function(){
+						var current = jQuery(this);
+						var posX = parseFloat(current.attr('x'));
+						var posY = parseFloat(current.attr('y'));
+						
+						if (posX === x && posY === y) {
+							current.addClass(openClass);
+							findNeightbor (x,y,'empty');
+						}
+					});
+				} else {
 					return;
 				}
-				// break is ommited
-			case '1':
-			case '2':
-			case '3':
-			case '4':
-			case '5':
-			case '6':
-			case '7':
-			case '8':
-			case '9':
-			case '.':
-				if (output.val() === '0' || readyForNewValue) {
-					output.val('');
-				}
-				
-				readyForNewValue = false;
-				
-				output.val(output.val() + keyValue);
-				currentValue = parseFloat(output.val());
-				break;
-
-			case '+':
-			case '-':
-			case '/':
-			case '*':
-				output.val(calculate());
-				action = keyValue;
-				readyForNewValue = true;
-				break;
-			case '=':
-				output.val(calculate());
-				readyForNewValue = true;
-				break;
-			case 'C':
-				result = undefined;
-				currentValue = 0;
-				action = null;
-				output.val(0);
-				readyForNewValue = true;
-				break;
-			case 'MC':
-				memory = 0;
-				break;
-			case 'MR':
-				currentValue = memory;
-				output.val(memory);
-				readyForNewValue = false;
-				break;
-			case 'MS':
-				memory = parseFloat(output.val());
-				action = null;
-				break;
+			}
 		}
 	}
 	
-	function calculate () {
-		switch (action) {
-			case '+':
-				result += currentValue;
-				break;
+	function generateMarkup () {
+		
+		holder.css({
+			"width": gameFiled*50
+		});
+		
+		
+		for (var x = 0; x < gameFiled; x++) {
+			for (var y = 0; y < gameFiled; y++) {
 				
-			case '-':
-				result -= currentValue;
-				break;
+				var number = gameCell[x][y].number;
 				
-			case '/':
-				result /= currentValue;
-				break;
-
-			case '*':
-				result *= currentValue;
-				break;
-				
-			default:
-				result = currentValue;
+				if (!gameCell[x][y].bomb) {
+					var item = jQuery('<li></li>').text(number).addClass(hiddenClass);
+					if(number === 0) {
+						item.addClass(emptyClass);
+					}
+				} else {
+					var item = jQuery('<li></li>').addClass(bombsClass).addClass(hiddenClass);
+				}
+				item.attr('x',x);
+				item.attr('y',y);
+				holder.append(item);
+			}
 		}
 		
-		return result;
+		elements = holder.find('li');
+	}
+	
+	function readyGame () {
+		elements.on('click',function(e){
+			
+			var current = jQuery(this);
+			var x = parseFloat(current.attr('x'));
+			var y = parseFloat(current.attr('y'));
+			
+			if (e.ctrlKey) {
+				if (current.hasClass(flagClass)) {
+					current.removeClass(flagClass);
+				} else {
+					current.addClass(flagClass);
+					checkFlags();
+				}
+			} else {
+				
+				if (current.hasClass(bombsClass)) {
+					endGame();
+				} else {
+					if(!current.hasClass(openClass)) {
+						current.addClass(openClass)
+						gameCell[x][y].state = 'open';
+						toggleEmpty(x,y);
+					}
+				}
+			}
+		})
+	}
+	
+	function toggleEmpty (x,y) {
+		findNeightbor(x,y,'empty');
+	}
+	
+	
+	function endGame () {
+		elements.each(function(){
+			var current = jQuery(this);
+			
+			if(current.hasClass(bombsClass)) {
+				current.addClass(openClass);
+			}
+			
+			holder.addClass(disabledClass);
+			title.text('GAME OVER :( PRESS F5');
+		});
+	}
+	
+	function checkFlags () {
+		var counter = 0;
+		elements.each(function(){
+			var current = jQuery(this);
+			if(current.hasClass(bombsClass) && current.hasClass(flagClass)) {
+				counter++;
+			}
+		});
+		
+		if (counter === bombs) {
+			title.text('YOU WON :)');
+		}
+	}
+	
+	
+	// Helpers
+	
+	function helperRandom (max) {
+		var min = 0;
+		return min + Math.floor(Math.random() * (max + 1 - min));
 	}
 }
-
-var calc1 = new Calc($('#calc-1'));
-
-
