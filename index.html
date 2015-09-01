@@ -38,17 +38,32 @@
 			text-indent: 0;
 		}
 		#miner li.open.bomb {
-			background:yellow;
+			background:url(images/expl.jpg) no-repeat;
+			background-size:50px 50px;
 		}
 		#miner li.hide.flag {
-			background:red;
+			background:url(images/flag.jpg) no-repeat;
+			background-size:50px 50px;
 		}
 	</style>
 </head>
 <body>
 	<div id="wrapper">
 		<h1 class="title">MINER</h1>
-		
+		<p>ctrl + click - Put the flag</p>
+		<form action="#">
+			<fieldset>
+				<label for="select">Please select a level</label>
+				<select id="select">
+					<option value="small">small</option>
+					<option value="medium">medium</option>
+					<option value="expert">expert</option>
+				</select>
+				<button class="start">Start Game</button>
+			</fieldset>
+		</form>
+		<span class="bombsLeft"></span>
+		<em> bombs left</em>
 		<ul id="miner">
 		
 		</ul>

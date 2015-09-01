@@ -15,13 +15,59 @@ function minerGame () {
 	var emptyClass = 'empty';
 	var disabledClass = 'disabled';
 	var elements;
+	var bombCount = bombs;
 	var title = wrapper.find('.title');
+	var countElement = wrapper.find('.bombsLeft');
 	
-	generateGameFields();
-	generateBombs();
-	setNum();
-	generateMarkup();
-	readyGame();
+	gameMode();
+	
+	function gameMode () {
+		var select = wrapper.find('#select');
+		var start = wrapper.find('.start');
+		select.on('change', function(e){
+			var mode = jQuery(this).val();
+			
+			switch(mode) {
+				case 'small': 
+					gameFiled = 10;
+					bombs = 10;
+					break;
+				case 'medium': 
+					gameFiled = 15;
+					bombs = 30;
+					bombCount = bombs;
+					break;
+				case 'expert': 
+					gameFiled = 15;
+					bombs = 60;
+					bombCount = bombs;
+					break;
+			}
+			gameCell = [];
+			elements = undefined;
+		});
+		
+		start.on('click',function(e){
+			if (holder.find('li').length > 0) {
+				holder.find('li').remove();
+			}
+			e.preventDefault();
+			if(holder.hasClass(disabledClass)){
+				holder.removeClass(disabledClass);
+			}
+			title.text('MINER');
+			gameInit();
+			
+		});
+	}
+	
+	function gameInit () {
+		generateGameFields();
+		generateBombs();
+		setNum();
+		generateMarkup();
+		readyGame();
+	}
 	
 	function generateGameFields () {
 		for (var x = 0; x < gameFiled; x++) {
@@ -39,13 +85,30 @@ function minerGame () {
 	}
 	
 	function generateBombs () {
-		for (var i = 0; i < bombs; i++) {
+		initRandom();
+		
+		function initRandom () {
+			for (var i = 0; i < bombs; i++) {
+				var obj = initRandomCoordinate();
+				
+				gameCell[obj.x][obj.y].bomb = true;
+				gameCell[obj.x][obj.y].number = -1;
+			}
+		}
+		
+		function initRandomCoordinate () {
 			var x = helperRandom(gameFiled-1);
 			var y = helperRandom(gameFiled-1);
-			if (!gameCell[x][y].bomb) {
-				gameCell[x][y].bomb = true;
-				gameCell[x][y].number = -1;
+			var obj = {};
+			
+			if (gameCell[x][y].bomb) {
+				return initRandomCoordinate();
 			}
+			
+			obj.x = x;
+			obj.y = y;
+			
+			return obj;
 		}
 	}
 	
@@ -66,9 +129,9 @@ function minerGame () {
 	}
 	
 	/*
-			mode = bombs;
-			mode = empty;
-		
+	
+		mode = bombs;
+		mode = empty;
 		
 	*/
 	
@@ -131,7 +194,6 @@ function minerGame () {
 			"width": gameFiled*50
 		});
 		
-		
 		for (var x = 0; x < gameFiled; x++) {
 			for (var y = 0; y < gameFiled; y++) {
 				
@@ -144,14 +206,15 @@ function minerGame () {
 					}
 				} else {
 					var item = jQuery('<li></li>').addClass(bombsClass).addClass(hiddenClass);
+					b++;
 				}
 				item.attr('x',x);
 				item.attr('y',y);
 				holder.append(item);
 			}
 		}
-		
 		elements = holder.find('li');
+		countElement.text(bombCount);
 	}
 	
 	function readyGame () {
@@ -164,8 +227,10 @@ function minerGame () {
 			if (e.ctrlKey) {
 				if (current.hasClass(flagClass)) {
 					current.removeClass(flagClass);
+					bombCount++;
 				} else {
 					current.addClass(flagClass);
+					bombCount--;
 					checkFlags();
 				}
 			} else {
@@ -180,6 +245,8 @@ function minerGame () {
 					}
 				}
 			}
+			countElement.text(bombCount);
+			
 		})
 	}
 	
