@@ -261,15 +261,13 @@ function minerGame () {
 			if(current.hasClass(bombsClass)) {
 				current.addClass(openClass);
 			}
-			
-			if(current.hasClass(flagClass) && !current.hasClass(bombClass)) {
+			if(current.hasClass(flagClass) && !current.hasClass(bombsClass)) {
 				current.addClass(mistakeClass);
 			}
-			
-			
-			holder.addClass(disabledClass);
-			title.text('GAME OVER :( PRESS F5');
 		});
+		
+		holder.addClass(disabledClass);
+		title.text('GAME OVER :( PRESS F5');
 	}
 	
 	function checkFlags () {
