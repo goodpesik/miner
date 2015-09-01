@@ -206,7 +206,6 @@ function minerGame () {
 					}
 				} else {
 					var item = jQuery('<li></li>').addClass(bombsClass).addClass(hiddenClass);
-					b++;
 				}
 				item.attr('x',x);
 				item.attr('y',y);
