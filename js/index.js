@@ -31,6 +31,7 @@ function minerGame () {
 				case 'small': 
 					gameFiled = 10;
 					bombs = 10;
+					bombCount = bombs
 					break;
 				case 'medium': 
 					gameFiled = 15;
