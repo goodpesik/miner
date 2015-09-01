@@ -26,22 +26,18 @@ function minerGame () {
 		var start = wrapper.find('.start');
 		select.on('change', function(e){
 			var mode = jQuery(this).val();
-			
 			switch(mode) {
 				case 'small': 
 					gameFiled = 10;
 					bombs = 10;
-					bombCount = bombs
 					break;
 				case 'medium': 
 					gameFiled = 15;
 					bombs = 30;
-					bombCount = bombs;
 					break;
 				case 'expert': 
 					gameFiled = 15;
 					bombs = 60;
-					bombCount = bombs;
 					break;
 			}
 			gameCell = [];
@@ -57,6 +53,8 @@ function minerGame () {
 				holder.removeClass(disabledClass);
 			}
 			title.text('MINER');
+			bombCount = bombs;
+			countElement.text(bombCount);
 			gameInit();
 			
 		});
