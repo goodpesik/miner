@@ -13,6 +13,7 @@ function minerGame () {
 	var openClass = "open";
 	var flagClass = 'flag';
 	var emptyClass = 'empty';
+	var mistakeClass = "mistake";
 	var disabledClass = 'disabled';
 	var elements;
 	var bombCount = bombs;
@@ -260,6 +261,11 @@ function minerGame () {
 			if(current.hasClass(bombsClass)) {
 				current.addClass(openClass);
 			}
+			
+			if(current.hasClass(flagClass) && !current.hasClass(bombClass)) {
+				current.addClass(mistakeClass);
+			}
+			
 			
 			holder.addClass(disabledClass);
 			title.text('GAME OVER :( PRESS F5');

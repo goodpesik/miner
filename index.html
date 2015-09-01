@@ -45,6 +45,24 @@
 			background:url(images/flag.jpg) no-repeat;
 			background-size:50px 50px;
 		}
+		#miner li.mistake {
+			background: none;
+			position:relative;
+		}
+		#miner li.mistake:after,
+		#miner li.mistake:before{
+			content:'';
+			width: 6px;
+			background:red;
+			height: 100%;
+			position: absolute;
+			left: 22px;
+			top: 0;
+			transform: rotate(45deg);
+		}
+		#miner li.mistake:before{
+			transform: rotate(-45deg);
+		}
 	</style>
 </head>
 <body>
