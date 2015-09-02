@@ -38,7 +38,7 @@ function minerGame () {
 					break;
 				case 'expert': 
 					gameFiled = 15;
-					bombs = 60;
+					bombs = 50;
 					break;
 			}
 			gameCell = [];
