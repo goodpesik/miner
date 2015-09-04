@@ -230,12 +230,14 @@ function minerGame () {
 	function readyGame () {
 		if(isTouchDevice) {
 			elements.on('tap taphold',function(e){
-				return false;
+				
 				var current = jQuery(this);
-				var putFlag = false;
+				var putFlag;
 				
 				if(e.type === 'taphold') {
 					putFlag = true;
+				} else {
+					putFlag = false;
 				}
 				gameHandler(current,putFlag);
 			});
