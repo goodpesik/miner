@@ -262,9 +262,13 @@ function minerGame () {
 					current.removeClass(flagClass);
 					bombCount++;
 				} else {
-					current.addClass(flagClass);
-					bombCount--;
-					checkFlags();
+					if(gameCell[x][y].state === 'open') {
+						return;
+					} else {
+						current.addClass(flagClass);
+						bombCount--;
+						checkFlags();
+					}
 				}
 			} else {
 				
