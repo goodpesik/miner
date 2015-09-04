@@ -229,18 +229,17 @@ function minerGame () {
 	
 	function readyGame () {
 		if(isTouchDevice) {
-			elements.on('tap taphold',function(e){
-				
+			elements.on('tap',function(e){
 				var current = jQuery(this);
-				var putFlag;
-				
-				if(e.type === 'taphold') {
-					putFlag = true;
-				} else {
-					putFlag = false;
-				}
+				var putFlag = false;
 				gameHandler(current,putFlag);
 			});
+			elements.on('taphold',function(e){
+				var current = jQuery(this);
+				var putFlag = true;
+				gameHandler(current,putFlag);
+			});
+			
 		} else {
 			elements.on('click ',function(e){
 				var current = jQuery(this);
