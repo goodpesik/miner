@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title>Miner</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<style>
+		#miner {
+			overflow: hidden;
+			margin: 0 auto;
+			padding: 0;
+			list-style: none;
+			position: relative;
+		}
+		#miner.disabled:before {
+			content:'';
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 999;
+		}
+		#miner li {
+			float: left;
+			box-sizing: border-box;
+			border:1px solid #000;
+			width: 50px;
+			height: 50px;
+			text-align: center;
+			line-height: 44px;
+		}
+		#miner li.hide {
+			background:gray;
+			text-indent: -9999px;
+		}
+		#miner li.open {
+			background:none;
+			text-indent: 0;
+		}
+		#miner li.open.bomb {
+			background:url(images/expl.jpg) no-repeat;
+			background-size:50px 50px;
+		}
+		#miner li.hide.flag {
+			background:url(images/flag.jpg) no-repeat;
+			background-size:50px 50px;
+		}
+		#miner li.mistake {
+			background: none !important;
+			position:relative;
+		}
+		#miner li.mistake:after,
+		#miner li.mistake:before{
+			content:'';
+			width: 6px;
+			background:red;
+			height: 100%;
+			position: absolute;
+			left: 22px;
+			top: 0;
+			transform: rotate(45deg);
+		}
+		#miner li.mistake:before{
+			transform: rotate(-45deg);
+		}
+		
+		@media only screen and (max-width: 767px) {
+			#miner {
+				width: 320px !important;
+			}
+			#miner li {
+				width: 32px;
+				height: 32px;
+				line-height: 31px;
+			}
+			#miner.large li{
+				width: 21px;
+				height: 21px;
+				line-height: 20px;
+			}
+			#miner li.open.bomb {
+				background-size:32px 32px;
+			}
+			#miner li.hide.flag {
+				background-size:32px 32px;
+			}
+			#miner.large li.open.bomb {
+				background-size:21px 21px;
+			}
+			#miner.large li.hide.flag {
+				background-size:21px 21px;
+			}
+		}
+		
+	</style>
+</head>
+<body>
+	<div id="wrapper">
+		<h1 class="title">MINER</h1>
+		<p>ctrl + click - Put the flag</p>
+		<form action="#">
+			<fieldset>
+				<label for="select">Please select a level</label>
+				<select id="select">
+					<option value="small">small</option>
+					<option value="medium">medium</option>
+					<option value="expert">expert</option>
+				</select>
+				<button class="start">Start Game</button>
+			</fieldset>
+		</form>
+		<span class="bombsLeft"></span>
+		<em> bombs left</em>
+		<ul id="miner">
+		
+		</ul>
+	</div>
+	<script src="js/jquery-1.8.3.min.js"></script>
+	<script src="js/jquery-mobile.min.js"></script>
+	<script src="js/index.js"></script>
+</body>
+</html>
