@@ -15,10 +15,12 @@ function minerGame () {
 	var emptyClass = 'empty';
 	var mistakeClass = "mistake";
 	var disabledClass = 'disabled';
+	var largeClass = 'large';
 	var elements;
 	var bombCount = bombs;
 	var title = wrapper.find('.title');
 	var countElement = wrapper.find('.bombsLeft');
+	var isTouchDevice = /MSIE 10.*Touch/.test(navigator.userAgent) || ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch;
 	
 	gameMode();
 	
@@ -31,14 +33,23 @@ function minerGame () {
 				case 'small': 
 					gameFiled = 10;
 					bombs = 10;
+					if(holder.hasClass(largeClass)) {
+						holder.removeClass(largeClass);
+					}
 					break;
 				case 'medium': 
 					gameFiled = 15;
 					bombs = 30;
+					if (!holder.hasClass(largeClass)) {
+						holder.addClass(largeClass);
+					}
 					break;
 				case 'expert': 
 					gameFiled = 15;
 					bombs = 50;
+					if (!holder.hasClass(largeClass)) {
+						holder.addClass(largeClass);
+					}
 					break;
 			}
 			gameCell = [];
@@ -217,13 +228,30 @@ function minerGame () {
 	}
 	
 	function readyGame () {
-		elements.on('click',function(e){
-			
-			var current = jQuery(this);
+		if(isTouchDevice) {
+			elements.on('tap taphold',function(e){
+				console.log(e.type);
+				var current = jQuery(this);
+				var putFlag = false;
+				
+				if(e.type === 'taphold') {
+					putFlag = true;
+				}
+				gameHandler(current,putFlag);
+			});
+		} else {
+			elements.on('click ',function(e){
+				var current = jQuery(this);
+				var putFlag = e.ctrlKey;
+				gameHandler(current,putFlag);
+			});
+		}
+		
+		
+		function gameHandler (current,putFlag) {
 			var x = parseFloat(current.attr('x'));
 			var y = parseFloat(current.attr('y'));
-			
-			if (e.ctrlKey) {
+			if (putFlag) {
 				if (current.hasClass(flagClass)) {
 					current.removeClass(flagClass);
 					bombCount++;
@@ -245,8 +273,7 @@ function minerGame () {
 				}
 			}
 			countElement.text(bombCount);
-			
-		})
+		}
 	}
 	
 	function toggleEmpty (x,y) {

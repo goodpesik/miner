@@ -3,6 +3,7 @@
 <head lang="en">
 	<meta charset="UTF-8">
 	<title>Miner</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<style>
 		#miner {
 			overflow: hidden;
@@ -63,6 +64,35 @@
 		#miner li.mistake:before{
 			transform: rotate(-45deg);
 		}
+		
+		@media only screen and (max-width: 767px) {
+			#miner {
+				width: 320px !important;
+			}
+			#miner li {
+				width: 32px;
+				height: 32px;
+				line-height: 31px;
+			}
+			#miner.large li{
+				width: 21px;
+				height: 21px;
+				line-height: 20px;
+			}
+			#miner li.open.bomb {
+				background-size:32px 32px;
+			}
+			#miner li.hide.flag {
+				background-size:32px 32px;
+			}
+			#miner.large li.open.bomb {
+				background-size:21px 21px;
+			}
+			#miner.large li.hide.flag {
+				background-size:21px 21px;
+			}
+		}
+		
 	</style>
 </head>
 <body>
@@ -87,6 +117,7 @@
 		</ul>
 	</div>
 	<script src="js/jquery-1.8.3.min.js"></script>
+	<script src="js/jquery-mobile.min.js"></script>
 	<script src="js/index.js"></script>
 </body>
 </html>
