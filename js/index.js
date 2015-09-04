@@ -230,7 +230,7 @@ function minerGame () {
 	function readyGame () {
 		if(isTouchDevice) {
 			elements.on('tap taphold',function(e){
-				console.log(e.type);
+				return false;
 				var current = jQuery(this);
 				var putFlag = false;
 				
