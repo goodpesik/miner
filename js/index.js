@@ -88,7 +88,8 @@ function minerGame () {
 					bomb: false,
 					number: 0,
 					flag: false,
-					state: false
+					state: false,
+					mobileState: 1
 				};
 				gameCell[x][y] = tempObj;
 			}
@@ -228,30 +229,34 @@ function minerGame () {
 	}
 	
 	function readyGame () {
-		if(isTouchDevice) {
-			elements.on('tap',function(e){
-				var current = jQuery(this);
-				var putFlag = false;
-				gameHandler(current,putFlag);
-			});
-			elements.on('taphold',function(e){
-				var current = jQuery(this);
-				var putFlag = true;
-				gameHandler(current,putFlag);
-			});
-			
-		} else {
-			elements.on('click ',function(e){
-				var current = jQuery(this);
-				var putFlag = e.ctrlKey;
-				gameHandler(current,putFlag);
-			});
-		}
+		elements.on('click ',function(e){
+			var current = jQuery(this);
+			var putFlag = e.ctrlKey;
+			gameHandler(current,putFlag);
+		});
 		
 		
 		function gameHandler (current,putFlag) {
 			var x = parseFloat(current.attr('x'));
 			var y = parseFloat(current.attr('y'));
+			var mobileState;
+			if (isTouchDevice) {
+				mobileState = gameCell[x][y].mobileState;
+				switch(mobileState) {
+					case 1:
+						gameCell[x][y].mobileState = 2;
+						putFlag = true;
+						break;
+					case 2:
+						gameCell[x][y].mobileState = 3;
+						putFlag = true;
+						break;
+					case 3:
+						putFlag = false;
+						break;
+				}
+			}
+			
 			if (putFlag) {
 				if (current.hasClass(flagClass)) {
 					current.removeClass(flagClass);
